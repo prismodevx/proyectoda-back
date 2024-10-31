@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:9000")
 @RestController
 @RequestMapping("/api/v1/tareas")
 public class TareaController {
