@@ -2,8 +2,10 @@ package com.grupo7.proyectoda.rest;
 
 import com.grupo7.proyectoda.converter.TareaConverter;
 import com.grupo7.proyectoda.dto.TareaDto;
+import com.grupo7.proyectoda.entity.Tarea;
 import com.grupo7.proyectoda.service.TareaService;
 import com.grupo7.proyectoda.util.WrapperResponse;
+import jakarta.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +38,20 @@ public class TareaController {
     public ResponseEntity<TareaDto> findById (@PathVariable("id") int id) {
         TareaDto dto = converter.fromEntity(service.findById(id));
 
+        return new WrapperResponse(true, "success", dto).createResponse(HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<TareaDto> create(@RequestBody TareaDto registro) {
+        Tarea entity = converter.fromDto(registro);
+        TareaDto dto = converter.fromEntity(service.save(entity));
+        return new WrapperResponse(true, "success", dto).createResponse(HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TareaDto> update(@PathVariable("id") int id, @RequestBody TareaDto registro) {
+        Tarea entity = converter.fromDto(registro);
+        TareaDto dto = converter.fromEntity(service.save(entity));
         return new WrapperResponse(true, "success", dto).createResponse(HttpStatus.OK);
     }
 }

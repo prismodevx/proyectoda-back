@@ -1,11 +1,12 @@
 package com.grupo7.proyectoda.service.impl;
 
 import com.grupo7.proyectoda.entity.Tarea;
+import com.grupo7.proyectoda.entity.Usuario;
 import com.grupo7.proyectoda.exception.GeneralException;
 import com.grupo7.proyectoda.exception.NoDataFoundException;
 import com.grupo7.proyectoda.exception.ValidateException;
-import com.grupo7.proyectoda.repository.TareaRepository;
-import com.grupo7.proyectoda.service.TareaService;
+import com.grupo7.proyectoda.repository.UsuarioRepository;
+import com.grupo7.proyectoda.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,15 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class TareaServiceImpl implements TareaService {
+public class UsuarioServiceImpl implements UsuarioService {
     @Autowired
-    private TareaRepository repository;
+    private UsuarioRepository repository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<Tarea> findAll(Pageable page) {
+    public List<Usuario> findAll(Pageable page) {
         try {
-            List<Tarea> registros = repository.findAll(page).toList();
+            List<Usuario> registros = repository.findAll(page).toList();
             return registros;
         } catch (ValidateException | NoDataFoundException e) {
             throw e;
@@ -33,9 +34,9 @@ public class TareaServiceImpl implements TareaService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Tarea> findAll() {
+    public List<Usuario> findAll() {
         try {
-            List<Tarea> registros = repository.findAll();
+            List<Usuario> registros = repository.findAll();
             return registros;
         } catch (ValidateException | NoDataFoundException e) {
             throw e;
@@ -45,21 +46,10 @@ public class TareaServiceImpl implements TareaService {
     }
 
     @Override
-    public List<Tarea> findByTitulo(String titulo, Pageable page) {
+    @Transactional(readOnly = true)
+    public Usuario findById(int id) {
         try {
-            List<Tarea> registros = repository.findByTituloContaining(titulo, page);
-            return registros;
-        } catch (ValidateException | NoDataFoundException e) {
-            throw e;
-        } catch (GeneralException e) {
-            throw new GeneralException("Error del servidor");
-        }
-    }
-
-    @Override
-    public Tarea findById(int id) {
-        try {
-            Tarea registro = repository.findById(id)
+            Usuario registro = repository.findById(id)
                     .orElseThrow(() -> new NoDataFoundException("No existe un registro con ese id"));
             return registro;
         } catch (ValidateException | NoDataFoundException e) {
@@ -70,22 +60,22 @@ public class TareaServiceImpl implements TareaService {
     }
 
     @Override
-    public Tarea save(Tarea tarea) {
+    @Transactional
+    public Usuario save(Usuario usuario) {
         try {
 //            CategoriaValidator.save(categoria);
 
-            if(tarea.getId() == 0) {
-                Tarea nuevo = repository.save(tarea);
+            if(usuario.getId() == 0) {
+                Usuario nuevo = repository.save(usuario);
                 return nuevo;
             }
 
-            Tarea registro = repository.findById(tarea.getId())
+            Usuario registro = repository.findById(usuario.getId())
                     .orElseThrow(() -> new NoDataFoundException("No existe un registro con ese id"));
-            registro.setTitulo(tarea.getTitulo());
-            registro.setDescripcion(tarea.getDescripcion());
-            registro.setFechaInicio(tarea.getFechaInicio());
-            registro.setFechaFin(tarea.getFechaFin());
-            registro.setFechaLimite(tarea.getFechaLimite());
+            registro.setAlias(usuario.getAlias());
+            registro.setEmail(usuario.getEmail());
+            registro.setPassword(usuario.getPassword());
+            registro.setAvatar(usuario.getAvatar());
             repository.save(registro);
 
             return registro;
@@ -94,10 +84,5 @@ public class TareaServiceImpl implements TareaService {
         } catch (GeneralException e) {
             throw new GeneralException("Error del servidor");
         }
-    }
-
-    @Override
-    public void delete(int id) {
-
     }
 }

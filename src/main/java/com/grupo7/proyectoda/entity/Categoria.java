@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -14,46 +15,22 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "tareas")
+@Table(name = "categorias")
 @EntityListeners(AuditingEntityListener.class)
-public class Tarea {
+public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "titulo", length = 200, nullable = false)
-    private String titulo;
-
-    @Column(name = "descripcion", length = 400)
-    private String descripcion;
-
-    @Column(name = "fecha_inicio")
-    @Temporal(TemporalType.DATE)
-    private Date fechaInicio;
-
-    @Column(name = "fecha_fin")
-    @Temporal(TemporalType.DATE)
-    private Date fechaFin;
-
-    @Column(name = "fecha_limite")
-    @Temporal(TemporalType.DATE)
-    private Date fechaLimite;
+    @Column(name = "nombre", length = 200, nullable = false)
+    private String nombre;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @ManyToOne
-    @JoinColumn(name = "categoria_id", nullable = false)
-    private Categoria categoria;
-
-    @ManyToOne
-    @JoinColumn(name = "prioridad_id")
-    private Prioridad prioridad;
-
-    @ManyToOne
-    @JoinColumn(name = "estado_id")
-    private Estado estado;
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tarea> tareas;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
