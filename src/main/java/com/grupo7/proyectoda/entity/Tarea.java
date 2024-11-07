@@ -39,22 +39,6 @@ public class Tarea {
     @Temporal(TemporalType.DATE)
     private Date fechaLimite;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
-
-    @ManyToOne
-    @JoinColumn(name = "categoria_id", nullable = false)
-    private Categoria categoria;
-
-    @ManyToOne
-    @JoinColumn(name = "prioridad_id")
-    private Prioridad prioridad;
-
-    @ManyToOne
-    @JoinColumn(name = "estado_id")
-    private Estado estado;
-
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
